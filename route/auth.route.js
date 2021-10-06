@@ -2,33 +2,34 @@ const express = require('express');
 const router = express.Router();
 const User = require('../schema/user');
 const jwtService = require('../service/jwt.service');
+const bcrypt = require('bcrypt');
+const log = require('../service/log.service');
 
 router.post('/register', (req, res) => {
     let { username, password } = req.body;
     const user = new User({
         name: username,
-        password: password
+        password: encryptPassword(password)
     });
     user.save().then(result => {
-        console.log(result);
+        log.info(result);
         res.json({
-            result: 'register successfully'
+            result: 'register succeeded!'
         });
     })
         .catch(err => {
             console.log(err);
             res.json({
-                result: 'register failed'
+                result: 'register failed! User name has been existing already.'
             });
         })
 })
 
 router.post('/login', (req, res) => {
     const { username, password } = req.body;
-    console.log(username);
-    User.findOne({ name: username, password: password }).then(result => {
-        if (result) {
-            console.log('found: ' + result);
+    User.findOne({ name: username}).then(result => {
+        log.info('found: ' + result);
+        if (result && bcrypt.compareSync(password, result.password)) {
             const accessToken = jwtService.sign({username: username});
             res.json({
                 result: 'success',
@@ -49,40 +50,45 @@ router.post('/login', (req, res) => {
         });
 })
 
-router.get('/users', (req, res) => {
-    User.find({}).exec((err, user) => {
-        if (err) {
-            console.log(err);
-            res.json({
-                result: 'fail:',
-                error: error
-            });
-        }
-        else {
-            res.json({
-                result: "success",
-                users: user
-            })
-        }
-    });
-});
+// router.get('/users', (req, res) => {
+//     User.find({}).exec((err, user) => {
+//         if (err) {
+//             console.log(err);
+//             res.json({
+//                 result: 'fail:',
+//                 error: error
+//             });
+//         }
+//         else {
+//             res.json({
+//                 result: "success",
+//                 users: user
+//             })
+//         }
+//     });
+// });
 
-router.get('/user/:username', (req, res) => {
-    User.find({ 'name': req.params.username }).exec((err, user) => {
-        if (err) {
-            console.log(err);
-            res.json({
-                result: 'fail',
-                error: error
-            });
-        }
-        else {
-            res.json({
-                result: "success",
-                users: user
-            })
-        }
-    });
-});
+// router.get('/user/:username', (req, res) => {
+//     User.find({ 'name': req.params.username }).exec((err, user) => {
+//         if (err) {
+//             console.log(err);
+//             res.json({
+//                 result: 'fail',
+//                 error: error
+//             });
+//         }
+//         else {
+//             res.json({
+//                 result: "success",
+//                 users: user
+//             })
+//         }
+//     });
+// });
+
+const encryptPassword = password => {
+    const saltRounds = 10;
+    return bcrypt.hashSync(password, saltRounds);
+}
 
 module.exports = router;

@@ -1,11 +1,11 @@
 const config = {
+    port: 9294,
     jwt: {
         secret: '@captain12',
         signOptions: {
             expiresIn: '300s'
         }
     },
-
     mongodb: {
         url: 'mongodb://localhost:27017/dev',
         dbOptions: {

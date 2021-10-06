@@ -4,16 +4,17 @@ const  mongoose = require('mongoose');
 const auth = require('./route/auth.route');
 const home = require('./route/home.route');
 const config = require('./config/global.config');
+const logger = require('./service/log.service');
 
 var app = express();
 
 mongoose.Promise = global.Promise;
 mongoose.connect(config.mongodb.url, config.mongodb.dbOptions).then(
     () => {
-        console.log('Connecting DB successfully!');
+        logger.info('Connecting DB successfully!');
     },
     (err) => {
-        console.log('Connecting DB failed. Error: ' + err);
+        logger.error('Connecting DB failed. Error: ' + err);
     }
 );
 
@@ -23,8 +24,8 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json({limit: '50mb'}));
 
 const log = (req, res, next) => {
-    console.log('path: ' + req.originalUrl);
-    console.log(req.body);
+    logger.info('path: ' + req.originalUrl);
+    logger.info('req body: ' + JSON.stringify(req.body));
     next();
 }
 
@@ -36,8 +37,8 @@ app.use(function(req, res, next) {
     next();
   });
 
-app.listen(3000, () => {
-    console.log('listening on port 3000');
+app.listen(config.port, () => {
+    logger.info('listening on port ' + config.port);
 })
 
 app.use("/auth", auth);
