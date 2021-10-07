@@ -11,6 +11,7 @@ router.post('/register', (req, res) => {
         name: username,
         password: encryptPassword(password)
     });
+    
     user.save().then(result => {
         log.info(result);
         res.json({
@@ -28,19 +29,23 @@ router.post('/register', (req, res) => {
 router.post('/login', (req, res) => {
     const { username, password } = req.body;
     User.findOne({ name: username}).then(result => {
-        log.info('found: ' + result);
+        log.info('found user: ' + result);
+        let message;
         if (result && bcrypt.compareSync(password, result.password)) {
             const accessToken = jwtService.sign({username: username});
             res.json({
                 result: 'success',
                 token: accessToken
             });
+            message = 'logged in successfully with jwt token: ' + accessToken;
         }
         else {
-            res.status(400).json({
-                result: 'incorrect credential information'
+            message = 'incorrect credential information';
+            res.status(401).json({
+                result: message
             });
         }
+        log.info(message);
     })
         .catch(err => {
             console.log(err);
