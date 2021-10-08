@@ -20,8 +20,8 @@ router.post('/register', (req, res) => {
     })
         .catch(err => {
             console.log(err);
-            res.json({
-                result: 'register failed! User name has been existing already.'
+            res.status(400).json({
+                result: 'Register failed! User name has been existing already.'
             });
         })
 })

@@ -5,8 +5,10 @@ const auth = require('./route/auth.route');
 const home = require('./route/home.route');
 const config = require('./config/global.config');
 const logger = require('./service/log.service');
+var cors = require('cors')
 
 var app = express();
+app.use(cors())
 
 mongoose.Promise = global.Promise;
 mongoose.connect(config.mongodb.url, config.mongodb.dbOptions).then(

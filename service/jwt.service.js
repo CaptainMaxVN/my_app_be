@@ -17,10 +17,10 @@ module.exports.authenticate = (req, res, next) => {
             next();
         }
         catch(err) {
-            res.send('you need to login again');
+            res.status(401).send('you need to login again');
         }
     }
     else {
-        res.send('request header doesnot have Authorization');
+        res.status(401).send('request header doesnot have Authorization');
     }
 }
