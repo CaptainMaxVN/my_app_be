@@ -3,6 +3,7 @@ const express = require('express');
 const  mongoose = require('mongoose');
 const auth = require('./route/auth.route');
 const home = require('./route/home.route');
+const todo = require('./route/todo.route');
 const config = require('./config/global.config');
 const logger = require('./service/log.service');
 var cors = require('cors')
@@ -44,5 +45,7 @@ app.listen(config.port, () => {
 })
 
 app.use("/auth", auth);
+app.use("/todo", todo);
 app.use("/", home);
+
 

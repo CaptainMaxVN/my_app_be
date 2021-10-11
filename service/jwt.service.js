@@ -6,8 +6,8 @@ module.exports.sign = (subject) => {
     
     return accessToken;
 }
-
 module.exports.authenticate = (req, res, next) => {
+
     const authorization = req.get('Authorization');
     if(authorization) {
         try {
