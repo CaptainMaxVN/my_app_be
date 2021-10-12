@@ -3,7 +3,7 @@ const dateFormat = require('dateformat');
 
 module.exports.createNewItem = (req, res) => {
     const {subject, description, createdBy} = req.body;
-    const createdAt = dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
+    const createdAt = dateFormat(new Date(), "isoDateTime");
     const newItem = new TodoItem({subject, description, createdBy, createdAt, completed: false});
     newItem.save().then(() => {
         res.send("created new item sucessfully");

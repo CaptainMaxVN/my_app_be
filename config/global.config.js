@@ -3,7 +3,7 @@ const config = {
     jwt: {
         secret: '@captain12',
         signOptions: {
-            expiresIn: '300s'
+            expiresIn: '1h'
         }
     },
     mongodb: {
