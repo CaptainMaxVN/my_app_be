@@ -9,7 +9,8 @@ var TodoItem = new Schema({
     description: String,
     completed: Boolean,
     createdBy: String,
-    createdAt: String
+    createdAt: String,
+    type: String
 });
 
 module.exports = mongoose.model('TodoItem', TodoItem);

@@ -2,9 +2,8 @@ const TodoItem = require('../schema/todoItem');
 const dateFormat = require('dateformat');
 
 module.exports.createNewItem = (req, res) => {
-    const {subject, description, createdBy} = req.body;
     const createdAt = dateFormat(new Date(), "isoDateTime");
-    const newItem = new TodoItem({subject, description, createdBy, createdAt, completed: false});
+    const newItem = new TodoItem({...req.body, createdAt, completed: false});
     newItem.save().then(() => {
         res.send("created new item sucessfully");
     })
